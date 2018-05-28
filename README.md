@@ -1,1 +1,1 @@
-원카드 프로그램 
+## Implemantation OneCard game using JAVA
