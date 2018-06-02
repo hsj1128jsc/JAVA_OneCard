@@ -1,6 +1,6 @@
 package OneCard;
 
-public class DeckOfCards {
+class DeckOfCards {
 
 	private Card[] elements;
 	private int size;
