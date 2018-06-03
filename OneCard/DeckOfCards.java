@@ -1,55 +1,51 @@
 package OneCard;
 
+import java.util.*;
+
+/**
+ * Implementing a DeckOfCards Class. It is implemented based on the stack and
+ * shuffling is added.
+ * 
+ * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-03
+ */
+
 class DeckOfCards {
+	private ArrayList<Card> elements;
 
-	private Card[] elements;
-	private int size;
-	public static final int DEFAULT_CAPACITY = 54;
-
-	/** Construct a deck with the default capacity 54 */
+	/** Construct a deck */
 	public DeckOfCards() {
-		this(DEFAULT_CAPACITY);
-	}
-
-	/** Construct a deck with the specified maximum capacity */
-	public DeckOfCards(int capacity) {
-		elements = new Card[capacity];
+		elements = new ArrayList<Card>();
 	}
 
 	/** Push a new card into the top of the deck */
-	public void push(Card inCard) {
-		elements[size++] = inCard;
+	public void push(Card card) {
+		elements.add(card);
 	}
 
 	/** Return and remove the top element from the deck */
 	public Card pop() {
-		return elements[--size];
+		Card peek = peek();
+		elements.remove(getSize() - 1);
+		return peek;
 	}
 
 	/** Return the top element from the deck */
 	public Card peek() {
-		return elements[size - 1];
+		return elements.get(getSize() - 1);
 	}
 
 	/** Test whether the deck is empty */
 	public boolean empty() {
-		return size == 0;
+		return elements.isEmpty();
 	}
 
 	/** Return the number of elements in the deck */
 	public int getSize() {
-		return size;
+		return elements.size();
 	}
 
 	/** Shuffle the cards */
 	public void shufflingCard() {
-		int length = this.getSize();
-		for (int i = 0; i < length; i++) {
-			// Generate an index randomly
-			int index = (int) (Math.random() * length);
-			Card temp = elements[i];
-			elements[i] = elements[index];
-			elements[index] = temp;
-		}
+		Collections.shuffle(elements);
 	}
 }
