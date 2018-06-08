@@ -6,7 +6,7 @@ import java.util.*;
  * Implementing a Computer Class. Computer class inherits Player Class and has
  * method to choose which card to play.
  * 
- * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-03
+ * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-08
  */
 
 class Computer extends Player {
@@ -18,14 +18,20 @@ class Computer extends Player {
 	}
 
 	public void checkAvailable(Card peekCard) {
-		for (int i = 0; i < availableIndex.size(); ++i)
+		for (int i = 0; i < hand.size(); ++i)
 			if (canPlay(hand.get(i), peekCard))
 				availableIndex.add(i);
 	}
 
-	public Card play() {
+	public Card play(Card peekCard) {
+		checkAvailable(peekCard);
 		int chosenCard = availableIndex.get(new Random().nextInt(availableIndex.size()));
 		availableIndex.clear();
 		return super.play(chosenCard);
+	}
+	
+	@Override
+	public void playTurn(GameFiled f) {
+		
 	}
 }

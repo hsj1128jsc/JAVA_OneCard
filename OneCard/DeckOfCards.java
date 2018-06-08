@@ -6,15 +6,17 @@ import java.util.*;
  * Implementing a DeckOfCards Class. It is implemented based on the stack and
  * shuffling is added.
  * 
- * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-03
+ * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-08
  */
 
 class DeckOfCards {
 	private ArrayList<Card> elements;
+	private int drawingCount;
 
 	/** Construct a deck */
 	public DeckOfCards() {
 		elements = new ArrayList<Card>();
+		setDrawingCount(1);
 	}
 
 	/** Push a new card into the top of the deck */
@@ -47,5 +49,13 @@ class DeckOfCards {
 	/** Shuffle the cards */
 	public void shufflingCard() {
 		Collections.shuffle(elements);
+	}
+
+	public int getDrawingCount() {
+		return drawingCount;
+	}
+
+	public void setDrawingCount(int drawingCount) {
+		this.drawingCount = drawingCount;
 	}
 }

@@ -4,7 +4,7 @@ package OneCard;
  * Implementing a Card Class. Because there is no need to change information, it
  * is implemented as an immutable class.
  * 
- * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-03
+ * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-08
  */
 
 class Card {
@@ -29,7 +29,7 @@ class Card {
 
 	/** 'A','2' and 'Joker' can attack next player */
 	public boolean canAttack() {
-		if (rank == "A" || rank == "2" || rank == "Joker")
+		if (rank == "A" || rank == "2" || suit == "Joker")
 			return true;
 		return false;
 	}

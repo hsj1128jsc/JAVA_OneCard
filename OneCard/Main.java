@@ -2,85 +2,68 @@ package OneCard;
 
 import java.util.*;
 
+/**
+ * Implementing Main Class. The Main Class supports you start and finish the
+ * game.
+ * 
+ * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-08
+ */
+
 public class Main {
+
+	static int computerNumber;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		initGame();
+		startGame();
 		// test1();
 		// test2();
-		test3();
+		// test3();
 	}
 
-	public static DeckOfCards makeDeck() {
-		DeckOfCards deck = new DeckOfCards();
-		String[] suit = { "♠", "♦", "♥", "♣" };
-		String[] rank = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
-		for (int i = 0; i < suit.length; ++i)
-			for (int j = 0; j < rank.length; ++j)
-				deck.push(new Card(suit[i], rank[j]));
-		deck.push(new Card("Joker", "Black"));
-		deck.push(new Card("Joker", "Red"));
-		deck.shufflingCard();
-		return deck;
-	}
-
-	public static void test1() {
-		// Test for making and shuffling deck
-		DeckOfCards grave = makeDeck();
-		grave.shufflingCard();
-		while (!grave.empty()) {
-			Card top = grave.pop();
-			System.out.println(top.toString());
-		}
-		System.out.println("-------------");
-		grave = makeDeck();
-		grave.shufflingCard();
-		while (!grave.empty()) {
-			Card top = grave.pop();
-			System.out.println(top.toString());
+	public static void initGame() {
+		Scanner input = new Scanner(System.in);
+		computerNumber = 0;
+		while (computerNumber > 3 || computerNumber < 1) {
+			System.out.print("Enter number of computer(1 ~ 3) : ");
+			computerNumber = input.nextInt();
 		}
 	}
 
-	public static void test2() {
-		// Test for player class
-		Player p = new Player();
-		DeckOfCards grave = makeDeck();
-		grave.shufflingCard();
+	public static void startGame() {
+		GameFiled field = new GameFiled();
+		Player[] player = createPlayer();
 
-		for (int i = 0; i < 30; ++i)
-			p.push(grave.pop());
-		p.showHand();
-		System.out.println("-----------------");
+		passCard(player, field);
 
-		for (int i = 0; i < p.getSize(); ++i) {
-			int temp = new Random().nextInt(p.getSize());
-			Card c = p.play(temp);
-			System.out.println(c.toString());
-			System.out.println(p.getSize());
+		while (field.getLosePlayerNum() < computerNumber) {
+			if (player[field.getNowTurn()].getLose())
+				field.setNowTurn(nextTurn(field.getNowTurn(), field.getDirection()));
+			else {
+				player[field.getNowTurn()].playTurn(field);
+				if (player[field.getNowTurn()].getLose())
+					field.setLosePlayerNum(field.getLosePlayerNum() + 1);
+				field.setNowTurn(nextTurn(field.getNowTurn(), field.getDirection()));
+			}
 		}
-		p.showHand();
 	}
 
-	public static void test3() {
-		// Test for Computer Class
-		DeckOfCards deck = makeDeck();
+	public static int nextTurn(int now, int dir) {
+		return (now + dir) % (computerNumber + 1);
+	}
 
-		Player player = new Player();
-		Computer com[] = new Computer[3];
-		for (int j = 0; j < 3; ++j)
-			com[j] = new Computer();
+	public static void passCard(Player p[], GameFiled field) {
+		for (int i = 0; i < computerNumber + 1; ++i)
+			for (int j = 0; j < 7; ++j)
+				p[i].push(field.deck.pop());
+	}
 
-		for (int i = 0; i < 7; ++i) {
-			player.push(deck.pop());
-			for (int j = 0; j < 3; ++j)
-				com[j].push(deck.pop());
-		}
-
-		player.showHand();
-		System.out.println("------------");
-		for (int j = 0; j < 3; ++j) {
-			com[j].showHand();
-			System.out.println("------------");
-		}
+	public static Player[] createPlayer() {
+		Player[] p = new Player[computerNumber + 1];
+		p[0] = new Player();
+		for (int i = 1; i < computerNumber + 1; ++i)
+			p[i] = new Computer();
+		return p;
 	}
 }
