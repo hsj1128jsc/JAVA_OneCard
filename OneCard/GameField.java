@@ -1,5 +1,7 @@
 package OneCard;
 
+import java.util.Scanner;
+
 /**
  * Implementing a GameField Class. GameField Class is the manager of the overall
  * part of the game area.
@@ -7,7 +9,7 @@ package OneCard;
  * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-08
  */
 
-public class GameFiled {
+public class GameField {
 	DeckOfCards stack;
 	DeckOfCards deck;
 
@@ -18,8 +20,10 @@ public class GameFiled {
 	private boolean changingSuit;
 	private String tempSuit;
 	private boolean onAttack;
+	private boolean oneMoreTurn;
+	private boolean jumpTurn;
 
-	GameFiled() {
+	GameField() {
 		stack = new DeckOfCards();
 		deck = makeDeck();
 		stack.push(deck.pop());
@@ -29,6 +33,8 @@ public class GameFiled {
 		setLosePlayerNum(0);
 		setChangingSuit(false);
 		setOnAttack(false);
+		setOneMoreTurn(false);
+		setJumpTurn(false);
 	}
 
 	DeckOfCards makeDeck() {
@@ -42,62 +48,6 @@ public class GameFiled {
 		deck.push(new Card("Joker", "Red"));
 		deck.shufflingCard();
 		return deck;
-	}
-
-	public int getNowTurn() {
-		return nowTurn;
-	}
-
-	public void setNowTurn(int nowTurn) {
-		this.nowTurn = nowTurn;
-	}
-
-	public int getDirection() {
-		return direction;
-	}
-
-	public void setDirection(int direction) {
-		this.direction = direction;
-	}
-
-	public int getLosePlayerNum() {
-		return losePlayerNum;
-	}
-
-	public void setLosePlayerNum(int losePlayerNum) {
-		this.losePlayerNum = losePlayerNum;
-	}
-
-	public boolean isChangingSuit() {
-		return changingSuit;
-	}
-
-	public void setChangingSuit(boolean changingSuit) {
-		this.changingSuit = changingSuit;
-	}
-
-	public String getTempSuit() {
-		return tempSuit;
-	}
-
-	public void setTempSuit(String tempSuit) {
-		this.tempSuit = tempSuit;
-	}
-
-	public boolean isOnAttack() {
-		return onAttack;
-	}
-
-	public void setOnAttack(boolean onAttack) {
-		this.onAttack = onAttack;
-	}
-
-	public int getDrawingCount() {
-		return drawingCount;
-	}
-
-	public void setDrawingCount(int drawingCount) {
-		this.drawingCount = drawingCount;
 	}
 
 	public Card top() {
@@ -174,29 +124,107 @@ public class GameFiled {
 		if (c.getRank() == "7")
 			changeSuit();
 		else if (c.getRank() == "K")
-			oneMoreTurn();
+			setOneMoreTurn(true);
 		else if (c.getRank() == "J")
-			jumpPlayer();
+			setJumpTurn(true);
 		else
 			reverseDirection();
 	}
 
 	private void changeSuit() {
-		// TODO Auto-generated method stub
-
-	}
-
-	private void oneMoreTurn() {
-		// TODO Auto-generated method stub
-
-	}
-
-	private void jumpPlayer() {
-		// TODO Auto-generated method stub
-
+		setChangingSuit(true);
+		String[] suit = { "♠", "♦", "♥", "♣" };
+		Scanner input = new Scanner(System.in);
+		int selectedSuit = 0;
+		while (true) {
+			System.out.print("Select a suit to change ");
+			for (int i = 0; i < 4; ++i)
+				System.out.print("" + (i + 1) + "." + suit[i] + " ");
+			System.out.println("");
+			selectedSuit = input.nextInt();
+			if (selectedSuit < 1 || selectedSuit > 4) {
+				System.out.println("Invalid input");
+				continue;
+			}
+			break;
+		}
+		System.out.println("Set a suit as " + suit[selectedSuit - 1]);
+		setTempSuit(suit[selectedSuit - 1]);
 	}
 
 	private void reverseDirection() {
 		setDirection(-1 * getDirection());
+	}
+
+	public int getNowTurn() {
+		return nowTurn;
+	}
+
+	public void setNowTurn(int nowTurn) {
+		this.nowTurn = nowTurn;
+	}
+
+	public int getDirection() {
+		return direction;
+	}
+
+	public void setDirection(int direction) {
+		this.direction = direction;
+	}
+
+	public int getLosePlayerNum() {
+		return losePlayerNum;
+	}
+
+	public void setLosePlayerNum(int losePlayerNum) {
+		this.losePlayerNum = losePlayerNum;
+	}
+
+	public boolean isChangingSuit() {
+		return changingSuit;
+	}
+
+	public void setChangingSuit(boolean changingSuit) {
+		this.changingSuit = changingSuit;
+	}
+
+	public String getTempSuit() {
+		return tempSuit;
+	}
+
+	public void setTempSuit(String tempSuit) {
+		this.tempSuit = tempSuit;
+	}
+
+	public boolean isOnAttack() {
+		return onAttack;
+	}
+
+	public void setOnAttack(boolean onAttack) {
+		this.onAttack = onAttack;
+	}
+
+	public int getDrawingCount() {
+		return drawingCount;
+	}
+
+	public void setDrawingCount(int drawingCount) {
+		this.drawingCount = drawingCount;
+	}
+
+	public boolean isOneMoreTurn() {
+		return oneMoreTurn;
+	}
+
+	public void setOneMoreTurn(boolean oneMoreTurn) {
+		this.oneMoreTurn = oneMoreTurn;
+	}
+
+	public boolean isJumpTurn() {
+		return jumpTurn;
+	}
+
+	public void setJumpTurn(boolean jumpTurn) {
+		this.jumpTurn = jumpTurn;
 	}
 }

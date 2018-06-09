@@ -10,11 +10,13 @@ import java.util.*;
  */
 
 class Player {
+	private String name;
 	protected ArrayList<Card> hand;
 	protected boolean lose = false;
 
 	public Player() {
 		hand = new ArrayList<Card>();
+		name = "Player";
 	}
 
 	/** Return and remove the chosen card from the hand */
@@ -27,9 +29,7 @@ class Player {
 	/** Show all cards into the hand */
 	protected void showHand() {
 		for (int i = 0; i < hand.size(); ++i) {
-			System.out.print("" + (i + 1) + ". " + hand.get(i).toString() + "\t");
-			if (i % 10 == 0)
-				System.out.println("");
+			System.out.println("" + (i + 1) + ". " + hand.get(i).toString() + "\t");
 		}
 	}
 
@@ -38,7 +38,7 @@ class Player {
 	 * player loses
 	 */
 	protected void push(Card c) {
-		if (hand.size() > 20)
+		if (hand.size() >= 20)
 			lose();
 		else
 			hand.add(c);
@@ -54,7 +54,7 @@ class Player {
 		return hand.size();
 	}
 
-	protected boolean canPlay(Card chosen, GameFiled field) {
+	protected boolean canPlay(Card chosen, GameField field) {
 		if (field.isOnAttack()) {
 			if (!chosen.canAttack())
 				return false;
@@ -70,6 +70,8 @@ class Player {
 	}
 
 	protected void lose() {
+		System.out.println(getName() + " Loses!!");
+		System.out.println("");
 		lose = true;
 	}
 
@@ -77,26 +79,41 @@ class Player {
 		return this.lose;
 	}
 
-	public void playTurn(GameFiled field) {
+	public void playTurn(GameField field) {
+		System.out.println("Top : " + field.top().toString());
 		showHand();
 		Scanner input = new Scanner(System.in);
 		int selectedIndex;
+		System.out
+				.println("Select index of card to play or enter '0' to draw " + field.getDrawingCount() + " cards : ");
 		while (true) {
-			System.out.println("Select index of card to play or enter '0' to draw : ");
 			selectedIndex = input.nextInt();
-			if (selectedIndex < 0 || selectedIndex > getSize())
+			if (selectedIndex < 0 || selectedIndex > getSize()) {
+				System.out.println("Invalid input");
 				continue;
+			}
 			if (selectedIndex == 0) {
 				cardDraw(field);
+				break;
 			}
 			if (canPlay(hand.get(selectedIndex - 1), field)) {
-
-			}
+				field.stack.push(play(selectedIndex - 1));
+				field.setChangingSuit(false);
+				if (field.stack.peek().canAttack()) {
+					field.setOnAttack(true);
+					field.setDrawingCount(field.attackStack(field.stack.peek())
+							+ (field.getDrawingCount() == 1 ? 0 : field.getDrawingCount()));
+				}
+				if (field.stack.peek().canSpecialAction())
+					field.specialAction(field.stack.peek());
+				break;
+			} else
+				System.out.println("Selected card can not be played.");
 		}
 
 	}
 
-	private void cardDraw(GameFiled field) {
+	protected void cardDraw(GameField field) {
 		int drawingCount = 0;
 		while (drawingCount++ < field.getDrawingCount() && !getLose()) {
 			push(field.deck.pop());
@@ -104,10 +121,15 @@ class Player {
 				field.shufflingDeck();
 		}
 		field.setDrawingCount(1);
+		field.setOnAttack(false);
 		if (getLose()) {
 			while (!empty())
 				field.deck.push(play(0));
 			field.deck.shufflingCard();
 		}
+	}
+
+	public String getName() {
+		return name;
 	}
 }

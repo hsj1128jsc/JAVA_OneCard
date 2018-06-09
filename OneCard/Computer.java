@@ -6,32 +6,78 @@ import java.util.*;
  * Implementing a Computer Class. Computer class inherits Player Class and has
  * method to choose which card to play.
  * 
- * 20121165 ±èÀçÈñ ¼ÒÇÁÆ®¿ş¾îÇÁ·ÎÁ§Æ® (03) - ÀÌ³²±Ô ±³¼ö´Ô 2018-06-08
+ * 20121165 ê¹€ì¬í¬ ì†Œí”„íŠ¸ì›¨ì–´í”„ë¡œì íŠ¸ (03) - ì´ë‚¨ê·œ êµìˆ˜ë‹˜ 2018-06-08
  */
 
 class Computer extends Player {
+	private String name;
 	private ArrayList<Integer> availableIndex;
 
-	public Computer() {
+	public Computer(String name) {
+		this.name = name;
 		hand = new ArrayList<Card>();
 		availableIndex = new ArrayList<Integer>();
 	}
 
-	public void checkAvailable(Card peekCard) {
+	public void checkAvailable(GameField field) {
 		for (int i = 0; i < hand.size(); ++i)
-			if (canPlay(hand.get(i), peekCard))
+			if (canPlay(hand.get(i), field))
 				availableIndex.add(i);
 	}
 
-	public Card play(Card peekCard) {
-		checkAvailable(peekCard);
-		int chosenCard = availableIndex.get(new Random().nextInt(availableIndex.size()));
-		availableIndex.clear();
-		return super.play(chosenCard);
-	}
-	
 	@Override
-	public void playTurn(GameFiled f) {
-		
+	public void showHand() {
+		System.out.println(getName() + " have " + getSize() + " cards.");
+		System.out.println("");
+	}
+
+	@Override
+	public void playTurn(GameField field) {
+		checkAvailable(field);
+		if (availableIndex.isEmpty()) {
+			System.out.println(getName() + " draws " + field.getDrawingCount() + " cards");
+			cardDraw(field);
+		} else {
+			int chosenCard = availableIndex.get(new Random().nextInt(availableIndex.size()));
+			availableIndex.clear();
+			field.stack.push(play(chosenCard));
+			field.setChangingSuit(false);
+			System.out.println(getName() + " plays " + field.stack.peek());
+			if (field.stack.peek().canAttack()) {
+				field.setOnAttack(true);
+				field.setDrawingCount(field.attackStack(field.stack.peek())
+						+ (field.getDrawingCount() == 1 ? 0 : field.getDrawingCount()));
+			}
+			if (field.stack.peek().canSpecialAction()) {
+				if (field.stack.peek().getRank() == "7")
+					autoChangeSuit(field);
+				else
+					field.specialAction(field.stack.peek());
+			}
+		}
+		showHand();
+	}
+
+	private void autoChangeSuit(GameField field) {
+		int[] suitCount = new int[4];
+		int maxv = 0;
+		int selectedSuit = 0;
+		String[] suit = { "â™ ", "â™¦", "â™¥", "â™£" };
+		for (int i = 0; i < getSize(); ++i)
+			for (int j = 0; j < 4; ++j)
+				if (suit[j] == hand.get(i).getSuit())
+					suitCount[j]++;
+		for (int i = 0; i < 4; ++i)
+			if (suitCount[i] > maxv) {
+				maxv = suitCount[i];
+				selectedSuit = i;
+			}
+		field.setChangingSuit(true);
+		field.setTempSuit(suit[selectedSuit]);
+		System.out.println(getName() + " sets a suit as " + suit[selectedSuit]);
+	}
+
+	public String getName() {
+		return name;
 	}
 }
