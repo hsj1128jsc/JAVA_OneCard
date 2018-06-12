@@ -3,10 +3,10 @@ package OneCard;
 import java.util.*;
 
 /**
- * Implementing a Computer Class. Computer class inherits Player Class and has
- * method to choose which card to play.
+ * Implementing a Computer Class.
+ * Computer class inherits Player Class and has method to choose which card to play.
  * 
- * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-08
+ * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-12
  */
 
 class Computer extends Player {
@@ -31,6 +31,10 @@ class Computer extends Player {
 		System.out.println("");
 	}
 
+	/**
+	 * Computer plays randomly selected cards from possible cards.
+	 * If computer doesn't have available card, draws cards.
+	 */
 	@Override
 	public void playTurn(GameField field) {
 		checkAvailable(field);
@@ -57,7 +61,8 @@ class Computer extends Player {
 		}
 		showHand();
 	}
-
+	
+	/** Computer selects the suit it has the most. */
 	private void autoChangeSuit(GameField field) {
 		int[] suitCount = new int[4];
 		int maxv = 0;

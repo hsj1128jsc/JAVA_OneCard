@@ -1,10 +1,10 @@
 package OneCard;
 
 /**
- * Implementing a Card Class. Because there is no need to change information, it
- * is implemented as an immutable class.
+ * Implementing a Card Class.
+ * Because there is no need to change information, it is implemented as an immutable class.
  * 
- * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-08
+ * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-12
  */
 
 class Card {

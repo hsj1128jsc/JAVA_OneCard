@@ -3,10 +3,10 @@ package OneCard;
 import java.util.*;
 
 /**
- * Implementing a DeckOfCards Class. It is implemented based on the stack and
- * shuffling is added.
+ * Implementing a DeckOfCards Class.
+ * It is implemented based on the stack and shuffling is added.
  * 
- * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-08
+ * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-12
  */
 
 class DeckOfCards {
@@ -51,10 +51,16 @@ class DeckOfCards {
 		Collections.shuffle(elements);
 	}
 
+	/** Returns the number of cards to be drawn */
 	public int getDrawingCount() {
 		return drawingCount;
 	}
 
+	/**
+	 * Set the number of cards to be drawn.
+	 * When player play attack card, drawingCount is accumulated.
+	 * And when the player draws cards, drawingCount is initialized.
+	 */
 	public void setDrawingCount(int drawingCount) {
 		this.drawingCount = drawingCount;
 	}

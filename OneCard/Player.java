@@ -3,10 +3,10 @@ package OneCard;
 import java.util.*;
 
 /**
- * Implementing a Player Class. Player can have less than 20 cards. If player's
- * card over 20, player lose.
+ * Implementing a Player Class. Player can have less than 20 cards.
+ * If player's card over 20, player lose.
  * 
- * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-08
+ * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-12
  */
 
 class Player {
@@ -34,8 +34,8 @@ class Player {
 	}
 
 	/**
-	 * Push a new card into the hand If the number of cards in the hand over 20,
-	 * player loses
+	 * Push a new card into the hand.
+	 * If the number of cards in the hand over 20, player loses.
 	 */
 	protected void push(Card c) {
 		if (hand.size() >= 20)
@@ -54,6 +54,7 @@ class Player {
 		return hand.size();
 	}
 
+	/** Return whether the chosen card can be played */
 	protected boolean canPlay(Card chosen, GameField field) {
 		if (field.isOnAttack()) {
 			if (!chosen.canAttack())
@@ -69,6 +70,7 @@ class Player {
 			return false;
 	}
 
+	/** Notification when a player loses */
 	protected void lose() {
 		System.out.println(getName() + " Loses!!");
 		System.out.println("");
@@ -79,13 +81,14 @@ class Player {
 		return this.lose;
 	}
 
+	/** Players play their turn. */
 	public void playTurn(GameField field) {
 		System.out.println("Top : " + field.top().toString());
 		showHand();
 		Scanner input = new Scanner(System.in);
 		int selectedIndex;
-		System.out
-				.println("Select index of card to play or enter '0' to draw " + field.getDrawingCount() + " cards : ");
+		System.out.print("Select index of card to play or enter '0' to draw ");
+		System.out.println(field.getDrawingCount() + " cards : ");
 		while (true) {
 			selectedIndex = input.nextInt();
 			if (selectedIndex < 0 || selectedIndex > getSize()) {
@@ -96,6 +99,8 @@ class Player {
 				cardDraw(field);
 				break;
 			}
+			// If selected card can be played, player plays that card.
+			// If the card can attack or do a special action, do it.
 			if (canPlay(hand.get(selectedIndex - 1), field)) {
 				field.stack.push(play(selectedIndex - 1));
 				field.setChangingSuit(false);
@@ -113,6 +118,10 @@ class Player {
 
 	}
 
+	/**
+	 * The player draws as many cards as are accumulated in the drawingCount.
+	 * And drawingCount is initialized to 1.
+	 */
 	protected void cardDraw(GameField field) {
 		int drawingCount = 0;
 		while (drawingCount++ < field.getDrawingCount() && !getLose()) {

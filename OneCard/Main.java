@@ -3,10 +3,10 @@ package OneCard;
 import java.util.*;
 
 /**
- * Implementing Main Class. The Main Class supports you start and finish the
- * game.
+ * Implementing Main Class.
+ * The Main Class supports you start and finish the game.
  * 
- * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-08
+ * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-12
  */
 
 public class Main {
@@ -14,12 +14,8 @@ public class Main {
 	static int computerNumber;
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		initGame();
 		startGame();
-		// test1();
-		// test2();
-		// test3();
 	}
 
 	/** Set the number of computer player */
@@ -30,25 +26,32 @@ public class Main {
 			System.out.print("Enter number of computer(1 ~ 3) : ");
 			computerNumber = input.nextInt();
 		}
+		// Create game field and players to play game
 	}
 
 	public static void startGame() {
 		GameField field = new GameField();
 		Player[] player = createPlayer();
 		passCard(player, field);
-		// Create game field and players to play game
+		playing(player, field);
+	} 
 
+	public static void playing(Player[] player, GameField field) {
 		while (field.getLosePlayerNum() < computerNumber) {
 			if (player[field.getNowTurn()].getLose())
 				field.setNowTurn(nextTurn(field.getNowTurn(), field.getDirection()));
 			else {
+				// If player doesn't lose, play his turn.
 				player[field.getNowTurn()].playTurn(field);
 				if (player[field.getNowTurn()].getLose())
 					field.setLosePlayerNum(field.getLosePlayerNum() + 1);
 				else if (player[field.getNowTurn()].empty()) {
+					// If player has no cards in hand, player wins.
 					System.out.println(player[field.getNowTurn()].getName() + " Win!!");
 					break;
 				}
+
+				// Set next player
 				if (field.isOneMoreTurn())
 					field.setOneMoreTurn(false);
 				else if (field.isJumpTurn()) {
@@ -61,8 +64,12 @@ public class Main {
 		}
 	}
 
-	public static int nextTurn(int now, int dir) {
-		return (computerNumber + 1 + now + dir) % (computerNumber + 1);
+	public static Player[] createPlayer() {
+		Player[] p = new Player[computerNumber + 1];
+		p[0] = new Player();
+		for (int i = 1; i < computerNumber + 1; ++i)
+			p[i] = new Computer("com" + i);
+		return p;
 	}
 
 	public static void passCard(Player p[], GameField field) {
@@ -71,11 +78,7 @@ public class Main {
 				p[i].push(field.deck.pop());
 	}
 
-	public static Player[] createPlayer() {
-		Player[] p = new Player[computerNumber + 1];
-		p[0] = new Player();
-		for (int i = 1; i < computerNumber + 1; ++i)
-			p[i] = new Computer("com" + i);
-		return p;
+	public static int nextTurn(int now, int dir) {
+		return (computerNumber + 1 + now + dir) % (computerNumber + 1);
 	}
 }

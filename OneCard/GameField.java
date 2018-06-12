@@ -3,10 +3,10 @@ package OneCard;
 import java.util.Scanner;
 
 /**
- * Implementing a GameField Class. GameField Class is the manager of the overall
- * part of the game area.
+ * Implementing a GameField Class.
+ * GameField Class is the manager of the overall part of the game area.
  * 
- * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-08
+ * 20121165 김재희 소프트웨어프로젝트 (03) - 이남규 교수님 2018-06-12
  */
 
 public class GameField {
@@ -37,6 +37,7 @@ public class GameField {
 		setJumpTurn(false);
 	}
 
+	/** Return the deck has all cards */
 	DeckOfCards makeDeck() {
 		DeckOfCards deck = new DeckOfCards();
 		String[] suit = { "♠", "♦", "♥", "♣" };
@@ -50,6 +51,7 @@ public class GameField {
 		return deck;
 	}
 
+	/** Return top card of stack. If the last card is 7, it shows the specified suit. */
 	public Card top() {
 		if (isChangingSuit()) {
 			return new Card(getTempSuit(), "7");
@@ -57,6 +59,7 @@ public class GameField {
 		return stack.peek();
 	}
 
+	/** It compares whether the card can be played according to the One card game rules. */
 	public boolean compareCard(Card a) {
 		if (a.getSuit() == "Joker" || top().getSuit() == "Joker") {
 			if (a.getSuit() == "Joker")
@@ -101,7 +104,8 @@ public class GameField {
 	public boolean isDeckEmpty() {
 		return deck.empty();
 	}
-
+	
+	/** If the deck is empty, shuffle the cards in stack and push them in deck. */
 	public void shufflingDeck() {
 		Card temp = stack.pop();
 		while (!stack.empty())
@@ -120,6 +124,11 @@ public class GameField {
 			return 5;
 	}
 
+	/** '7', 'J','Q' and 'K' have special ability.
+	 * '7' can change suit.
+	 * 'J' jumps next player's turn.
+	 * 'Q' reverses direction.
+	 * 'K' play one more turn. */
 	public void specialAction(Card c) {
 		if (c.getRank() == "7")
 			changeSuit();
@@ -131,6 +140,7 @@ public class GameField {
 			reverseDirection();
 	}
 
+	/** If player plays '7' card, player can change suit to anything he wants. */
 	private void changeSuit() {
 		setChangingSuit(true);
 		String[] suit = { "♠", "♦", "♥", "♣" };
